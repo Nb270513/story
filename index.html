@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abenteuer-Geschichten</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Fredoka:wght@400;500;600&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+
+    <!-- =================== START-SCREEN =================== -->
+    <section id="screen-start" class="screen is-active">
+      <div class="card card--center">
+        <div class="big-emoji">🗺️</div>
+        <h1 class="title">Dein Abenteuer</h1>
+        <p class="subtitle">
+          Erzähle uns ein paar Dinge über dich und deine Freunde — dann bauen wir
+          daraus eine spannende Geschichte, in der du selbst entscheidest, wie es weitergeht!
+        </p>
+        <button id="btn-go-input" class="btn btn--primary btn--xl">
+          Los geht's ✨
+        </button>
+      </div>
+    </section>
+
+    <!-- =================== INPUT-SCREEN =================== -->
+    <section id="screen-input" class="screen">
+      <div class="card">
+        <h2 class="title title--sm">Erzähl uns von dir</h2>
+        <p class="subtitle">Fülle alle Felder aus — deine Antworten kommen in die Geschichte!</p>
+
+        <form id="form-input" class="form" novalidate>
+          <fieldset class="form-group">
+            <legend>👫 Deine 5 Freunde</legend>
+            <div class="grid grid--2">
+              <label>1. Name<input type="text" name="name1" required maxlength="20" placeholder="z. B. Noah" /></label>
+              <label>2. Name<input type="text" name="name2" required maxlength="20" placeholder="z. B. Leo" /></label>
+              <label>3. Name<input type="text" name="name3" required maxlength="20" placeholder="z. B. Mia" /></label>
+              <label>4. Name<input type="text" name="name4" required maxlength="20" placeholder="z. B. Emma" /></label>
+              <label>5. Name<input type="text" name="name5" required maxlength="20" placeholder="z. B. Finn" /></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-group">
+            <legend>🎨 Deine Lieblingssachen</legend>
+            <div class="grid grid--2">
+              <label>🎨 Lieblingsfarbe<input type="text" name="color" required maxlength="20" placeholder="z. B. blau" /></label>
+              <label>🐾 Ein Tier<input type="text" name="animal" required maxlength="20" placeholder="z. B. Fuchs" /></label>
+              <label>📍 Lieblingsort<input type="text" name="place" required maxlength="30" placeholder="z. B. der Park" /></label>
+              <label>🍕 Lieblingsessen<input type="text" name="food" required maxlength="25" placeholder="z. B. Pizza" /></label>
+              <label>💎 Besonderer Gegenstand<input type="text" name="item" required maxlength="25" placeholder="z. B. Opas Uhr" /></label>
+              <label>🪄 Fantasiewort<input type="text" name="fantasyWord" required maxlength="20" placeholder="z. B. Blibberwupp" /></label>
+              <label>😰 Angst vor...<input type="text" name="fear" required maxlength="25" placeholder="z. B. Spinnen" /></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="form-group">
+            <legend>⭐ Noch ein bisschen mehr</legend>
+            <div class="grid grid--2">
+              <label>🦸 Superkraft<input type="text" name="superpower" required maxlength="25" placeholder="z. B. unsichtbar werden" /></label>
+              <label>🚀 Fortbewegungsmittel<input type="text" name="vehicle" required maxlength="25" placeholder="z. B. fliegendes Fahrrad" /></label>
+              <label>🌦️ Lieblingswetter<input type="text" name="weather" required maxlength="20" placeholder="z. B. Gewitter" /></label>
+              <label>🎵 Lieblingsgeräusch<input type="text" name="sound" required maxlength="25" placeholder="z. B. Regen auf dem Dach" /></label>
+            </div>
+          </fieldset>
+
+          <div class="form-actions">
+            <button type="button" id="btn-back-start" class="btn btn--ghost">⬅️ Zurück</button>
+            <button type="submit" class="btn btn--primary btn--xl">Abenteuer starten 🚀</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- =================== STORY-SCREEN =================== -->
+    <section id="screen-story" class="screen">
+      <div class="card card--story" id="story-card">
+        <div class="progress">
+          <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+          <span class="progress-text" id="progress-text">Szene 1</span>
+        </div>
+
+        <div class="scene-icon" id="scene-icon">🌅</div>
+        <p class="scene-text" id="scene-text"></p>
+
+        <div class="choices" id="scene-choices"></div>
+
+        <div class="story-actions">
+          <button id="btn-restart-story" class="btn btn--ghost btn--sm">🔁 Neu starten</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================== ENDE-SCREEN =================== -->
+    <section id="screen-end" class="screen">
+      <div class="card card--center">
+        <div class="big-emoji" id="end-icon">🎉</div>
+        <h2 class="title title--sm" id="end-label">Ende</h2>
+        <p class="scene-text" id="end-text"></p>
+
+        <div class="end-actions">
+          <button id="btn-same-names" class="btn btn--primary btn--xl">
+            🔁 Neue Geschichte mit denselben Namen
+          </button>
+          <button id="btn-full-restart" class="btn btn--ghost">
+            🆕 Ganz von vorn (Eingaben löschen)
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script-Reihenfolge: erst Story-Daten, dann App-Logik -->
+  <script src="story.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

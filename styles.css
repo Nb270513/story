@@ -1,0 +1,357 @@
+/* =========================================================================
+   Abenteuer-Geschichten — Styles
+   Farbpalette und Abstaende als CSS-Variablen: leicht anpassbar.
+   ========================================================================= */
+
+:root {
+  --color-bg-1:       #ffe9d6;   /* warmes Cream */
+  --color-bg-2:       #ffd6e8;   /* sanftes Pink */
+  --color-bg-3:       #d6ecff;   /* luftiges Blau */
+  --color-surface:    #ffffff;
+  --color-text:       #2d2150;
+  --color-muted:      #5a4f7a;
+
+  --color-primary:    #ff7a3d;   /* Sunset-Orange */
+  --color-primary-2:  #ff5277;
+  --color-accent:     #6cc3ff;
+  --color-good:       #59d49a;
+
+  --shadow-card:      0 20px 60px rgba(45, 33, 80, 0.15);
+  --shadow-btn:       0 8px 20px rgba(255, 122, 61, 0.35);
+
+  --radius-lg:  24px;
+  --radius-md:  16px;
+  --radius-sm:  10px;
+
+  --ff-body:    "Fredoka", system-ui, sans-serif;
+  --ff-title:   "Baloo 2", "Fredoka", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--ff-body);
+  color: var(--color-text);
+  background:
+    radial-gradient(circle at 15% 20%, var(--color-bg-2) 0%, transparent 55%),
+    radial-gradient(circle at 85% 80%, var(--color-bg-3) 0%, transparent 55%),
+    var(--color-bg-1);
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 24px 16px;
+  font-size: 17px;
+  line-height: 1.55;
+}
+
+.app {
+  width: 100%;
+  max-width: 760px;
+}
+
+/* ---------- Screens ---------- */
+.screen { display: none; }
+.screen.is-active { display: block; animation: fadeInUp 0.45s ease both; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Card ---------- */
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--shadow-card);
+}
+
+.card--center {
+  text-align: center;
+}
+
+.card--story {
+  position: relative;
+}
+
+/* ---------- Typography ---------- */
+.title {
+  font-family: var(--ff-title);
+  font-weight: 800;
+  font-size: clamp(28px, 5vw, 44px);
+  margin: 0 0 12px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-primary-2));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.title--sm {
+  font-size: clamp(22px, 3.5vw, 30px);
+}
+
+.subtitle {
+  color: var(--color-muted);
+  margin: 0 0 24px;
+  font-size: 17px;
+}
+
+.big-emoji {
+  font-size: 72px;
+  margin-bottom: 8px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  font-family: var(--ff-body);
+  font-weight: 600;
+  font-size: 17px;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px 22px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  line-height: 1.2;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 3px;
+}
+
+.btn--primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-2));
+  color: white;
+  box-shadow: var(--shadow-btn);
+}
+
+.btn--primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 26px rgba(255, 122, 61, 0.45);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-muted);
+  border: 2px solid rgba(90, 79, 122, 0.25);
+}
+
+.btn--ghost:hover {
+  background: rgba(90, 79, 122, 0.06);
+  color: var(--color-text);
+}
+
+.btn--xl {
+  padding: 18px 30px;
+  font-size: 19px;
+  min-height: 64px;
+}
+
+.btn--sm {
+  padding: 8px 14px;
+  font-size: 14px;
+}
+
+/* ---------- Form ---------- */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.form-group {
+  border: 2px solid rgba(45, 33, 80, 0.08);
+  border-radius: var(--radius-md);
+  padding: 16px 18px 18px;
+  margin: 0;
+}
+
+.form-group legend {
+  font-family: var(--ff-title);
+  font-weight: 600;
+  font-size: 18px;
+  padding: 0 8px;
+  color: var(--color-primary);
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+.grid--2 {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 540px) {
+  .grid--2 { grid-template-columns: 1fr; }
+}
+
+.form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.form input {
+  font-family: var(--ff-body);
+  font-size: 16px;
+  padding: 12px 14px;
+  border: 2px solid rgba(45, 33, 80, 0.12);
+  border-radius: var(--radius-sm);
+  background: #fbfaff;
+  color: var(--color-text);
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.form input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  background: #fff;
+}
+
+.form input:invalid:not(:placeholder-shown) {
+  border-color: var(--color-primary-2);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.form-actions .btn--xl { flex: 1; min-width: 220px; }
+
+/* ---------- Story ---------- */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 10px;
+  background: rgba(45, 33, 80, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 10%;
+  background: linear-gradient(
+    90deg,
+    #ff7a3d, #ff5277, #c86cff, #6cc3ff, #59d49a
+  );
+  border-radius: 999px;
+  transition: width 0.35s ease;
+}
+
+.progress-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-muted);
+  min-width: 70px;
+  text-align: right;
+}
+
+.scene-icon {
+  font-size: 64px;
+  text-align: center;
+  margin: 6px 0 14px;
+}
+
+/* bei jedem Szenenwechsel neu animieren */
+.card--story.is-fading .scene-icon,
+.card--story.is-fading .scene-text,
+.card--story.is-fading .choices {
+  animation: fadeInUp 0.4s ease both;
+}
+
+.scene-text {
+  font-size: 18px;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin: 0 0 26px;
+  white-space: pre-wrap;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.choice-btn {
+  text-align: left;
+  background: #fbfaff;
+  border: 2px solid rgba(45, 33, 80, 0.1);
+  color: var(--color-text);
+  font-family: var(--ff-body);
+  font-size: 17px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  min-height: 60px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.choice-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-primary);
+  background: #fff;
+}
+
+.choice-btn .choice-letter {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-2));
+  color: white;
+  font-family: var(--ff-title);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.story-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* ---------- Ende-Screen ---------- */
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ---------- Kleinere Screens ---------- */
+@media (max-width: 600px) {
+  body { padding: 12px 10px; font-size: 16px; }
+  .card { padding: 22px 18px; }
+  .big-emoji { font-size: 60px; }
+  .scene-icon { font-size: 52px; }
+  .btn--xl { padding: 16px 22px; font-size: 17px; }
+}
