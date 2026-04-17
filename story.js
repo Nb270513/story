@@ -27,9 +27,10 @@ window.STORY = {
     start: {
       icon: "🌅",
       art: {
+        // Hero = das Lieblingstier des Nutzers, damit klar ist, was vorbeihuscht.
         gradient: "linear-gradient(135deg, #ffb88c 0%, #ff8e72 50%, #ffd6a5 100%)",
-        hero: "🌅",
-        items: ["🧺", "🍕", "🦊", "🌿"],
+        hero: ":animal:",
+        items: ["🧺", ":food:", "🌿", "🌅", "☀️"],
       },
       text:
         "{name1}, {name2} und {name3} sitzen an ihrem Lieblingsplatz: {place}. " +
@@ -48,7 +49,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(160deg, #1f4d3a 0%, #2d6e52 55%, #5aa17a 100%)",
         hero: "🌲",
-        items: ["🌳", "🌲", "🍃", "🦊", "✨"],
+        items: ["🌳", "🌲", ":animal:", ":fear:", "✨"],
       },
       text:
         "Der Wald ist dunkel und voller wispernder Blätter. {name4} hat etwas " +
@@ -66,7 +67,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(180deg, #2a1b4a 0%, #4b2e82 55%, #8a5fd6 100%)",
         hero: "💎",
-        items: ["✨", "⭐", "🕯️", "✨"],
+        items: ["✨", ":item:", "🕯️", "⭐"],
       },
       text:
         "In der Höhle funkelt ein riesiger Kristall an der Decke — er leuchtet " +
@@ -83,7 +84,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(170deg, #3aa7d4 0%, #7cc8e8 55%, #b8e6f2 100%)",
         hero: "🌊",
-        items: ["🍃", "🌿", "🐟", "💧"],
+        items: ["🍃", "🌿", ":animal:", "💧"],
       },
       text:
         "Am Fluss sehen die Freunde ein kleines Boot aus Blättern. " +
@@ -118,7 +119,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(170deg, #f4c685 0%, #e79b5a 55%, #b06b42 100%)",
         hero: "🏘️",
-        items: ["🍞", "🧺", "🎪", "🌻"],
+        items: [":food:", "🧺", "🎪", "🌻"],
       },
       text:
         "Im Dorf ist heute Markt. Es riecht überall nach {food}. " +
@@ -152,7 +153,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(135deg, #d96eb0 0%, #f7a74a 50%, #f7d768 100%)",
         hero: "🛒",
-        items: ["🗺️", "💰", "🎈", "🫙", "💎"],
+        items: [":item:", "💰", "🎈", "🫙", "💎"],
       },
       text:
         "Der Basar ist voller Stände mit seltsamen Dingen. Ein Verkäufer " +
@@ -171,7 +172,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(135deg, #2a1b66 0%, #6a3dbb 50%, #b487e8 100%)",
         hero: "🔮",
-        items: ["✨", "⭐", "💎", "🌟", "✨"],
+        items: ["✨", ":item:", "💎", "🌟", "✨"],
       },
       text:
         "Als {name2} den Kristall berührt, löst sich die ganze Höhle in Sternenstaub auf. " +
@@ -185,8 +186,8 @@ window.STORY = {
       ending: "lustig",
       art: {
         gradient: "linear-gradient(150deg, #6ecaf0 0%, #a6e2f5 50%, #fff2b8 100%)",
-        hero: "😂",
-        items: ["💦", "🐟", "🦊", "🎉", "💧"],
+        hero: ":animal:",
+        items: ["💦", "🐟", "😂", "🎉", "💧"],
       },
       text:
         "{name3} springt ins Wasser — und platsch! Der Fluss ist nur knietief. " +
@@ -201,8 +202,8 @@ window.STORY = {
       ending: "mutig",
       art: {
         gradient: "linear-gradient(135deg, #ff9a3c 0%, #ffd76a 50%, #fff0a8 100%)",
-        hero: "🦁",
-        items: ["🏆", "⭐", "✨", "🏅"],
+        hero: "🏆",
+        items: [":animal:", "⭐", "✨", "🏅", ":fear:"],
       },
       text:
         "{name1} geht voraus, {name2} und {name4} folgen ohne zu zögern. " +
@@ -217,7 +218,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(135deg, #ff6aa0 0%, #ffa85c 50%, #8ae0ff 100%)",
         hero: "🎉",
-        items: ["✨", "🪄", "💫", "⭐", "🎊"],
+        items: ["✨", "🪄", "💫", "⭐", "🎊", ":item:"],
       },
       text:
         "Die Person auf der Brücke lacht und zieht die Kapuze zurück — es ist {name5} selbst " +
@@ -232,7 +233,7 @@ window.STORY = {
       art: {
         gradient: "linear-gradient(135deg, #ff8ec7 0%, #ffc46a 50%, #a8e88a 100%)",
         hero: "🎊",
-        items: ["🍕", "🍰", "🕺", "💃", "🎈", "🎉"],
+        items: [":food:", ":animal:", "🕺", "💃", "🎈", "🎉"],
       },
       text:
         "Statt der Schatzkarte kaufen die Freunde jede Menge {food} für alle im Dorf. " +

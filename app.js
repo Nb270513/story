@@ -197,23 +197,37 @@
 
   // ---------- Szenen-Art (Emoji-Collage) ----------
   // Rendert den Szenen-Hintergrund: Gradient + grosses Hero-Emoji in der Mitte
-  // + mehrere kleine Items drumherum. Positionen werden pseudo-zufaellig
-  // (aber deterministisch per Index) gesetzt, damit jede Szene einzigartig aussieht.
+  // + mehrere kleine Items drumherum. Positionen werden per Index gesetzt,
+  // damit jede Szene einzigartig aussieht.
+  //
+  // Tokens der Form ":feldname:" (z. B. ":animal:") werden durch das Emoji
+  // der aktuellen Chip-Auswahl ersetzt — so passt das Bild zur Wahl des Nutzers.
+  function resolveArtEmoji(ch) {
+    if (typeof ch !== "string") return "";
+    const m = /^:(\w+):$/.exec(ch);
+    if (!m) return ch;
+    const opts = CHIP_OPTIONS[m[1]];
+    if (!opts) return "";
+    const match = opts.find((o) => o.v === state.inputs[m[1]]);
+    return match ? match.e : "";
+  }
+
   function renderSceneArt(artEl, art) {
     if (!artEl || !art) return;
     artEl.style.background = art.gradient || "linear-gradient(135deg, #ffd4b8, #c9e4ff)";
     artEl.innerHTML = "";
 
-    // Hero-Emoji, gross und mittig
-    if (art.hero) {
+    // Hero-Emoji, gross und mittig (kann auch ein Token sein)
+    const heroChar = resolveArtEmoji(art.hero);
+    if (heroChar) {
       const hero = document.createElement("div");
       hero.className = "art-hero";
-      hero.textContent = art.hero;
+      hero.textContent = heroChar;
       artEl.appendChild(hero);
     }
 
-    // Items: in 6 vordefinierten Slots rund um die Szene platziert, damit
-    // nichts in der Mitte mit dem Hero kollidiert.
+    // Items: Tokens aufloesen, leere Ergebnisse rausfiltern,
+    // dann in Slots rund um die Szene platzieren.
     const slots = [
       { x: 10, y: 18, r: -8,  s: 1.1 },
       { x: 82, y: 22, r:  10, s: 0.95 },
@@ -222,7 +236,12 @@
       { x: 48, y: 14, r:  0,  s: 0.9 },
       { x: 48, y: 84, r:  4,  s: 0.9 },
     ];
-    (art.items || []).slice(0, slots.length).forEach((ch, i) => {
+    const resolved = (art.items || [])
+      .map(resolveArtEmoji)
+      .filter((ch) => ch && ch.length > 0)
+      .slice(0, slots.length);
+
+    resolved.forEach((ch, i) => {
       const slot = slots[i];
       const el = document.createElement("div");
       el.className = "art-item";
