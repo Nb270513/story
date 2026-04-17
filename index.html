@@ -49,26 +49,38 @@
           </fieldset>
 
           <fieldset class="form-group">
-            <legend>🎨 Deine Lieblingssachen</legend>
-            <div class="grid grid--2">
-              <label>🎨 Lieblingsfarbe<input type="text" name="color" required maxlength="20" placeholder="z. B. blau" /></label>
-              <label>🐾 Ein Tier<input type="text" name="animal" required maxlength="20" placeholder="z. B. Fuchs" /></label>
-              <label>📍 Lieblingsort<input type="text" name="place" required maxlength="30" placeholder="z. B. der Park" /></label>
-              <label>🍕 Lieblingsessen<input type="text" name="food" required maxlength="25" placeholder="z. B. Pizza" /></label>
-              <label>💎 Besonderer Gegenstand<input type="text" name="item" required maxlength="25" placeholder="z. B. Opas Uhr" /></label>
-              <label>🪄 Fantasiewort<input type="text" name="fantasyWord" required maxlength="20" placeholder="z. B. Blibberwupp" /></label>
-              <label>😰 Angst vor...<input type="text" name="fear" required maxlength="25" placeholder="z. B. Spinnen" /></label>
+            <legend>✨ Such dir was aus</legend>
+            <div class="chip-field">
+              <span class="chip-label">🎨 Lieblingsfarbe</span>
+              <div class="chips" data-field="color"></div>
+            </div>
+            <div class="chip-field">
+              <span class="chip-label">🐾 Ein Tier</span>
+              <div class="chips" data-field="animal"></div>
+            </div>
+            <div class="chip-field">
+              <span class="chip-label">📍 Lieblingsort</span>
+              <div class="chips" data-field="place"></div>
+            </div>
+            <div class="chip-field">
+              <span class="chip-label">🍕 Lieblingsessen</span>
+              <div class="chips" data-field="food"></div>
+            </div>
+            <div class="chip-field">
+              <span class="chip-label">💎 Besonderer Gegenstand</span>
+              <div class="chips" data-field="item"></div>
+            </div>
+            <div class="chip-field">
+              <span class="chip-label">😰 Angst vor...</span>
+              <div class="chips" data-field="fear"></div>
             </div>
           </fieldset>
 
           <fieldset class="form-group">
-            <legend>⭐ Noch ein bisschen mehr</legend>
-            <div class="grid grid--2">
-              <label>🦸 Superkraft<input type="text" name="superpower" required maxlength="25" placeholder="z. B. unsichtbar werden" /></label>
-              <label>🚀 Fortbewegungsmittel<input type="text" name="vehicle" required maxlength="25" placeholder="z. B. fliegendes Fahrrad" /></label>
-              <label>🌦️ Lieblingswetter<input type="text" name="weather" required maxlength="20" placeholder="z. B. Gewitter" /></label>
-              <label>🎵 Lieblingsgeräusch<input type="text" name="sound" required maxlength="25" placeholder="z. B. Regen auf dem Dach" /></label>
-            </div>
+            <legend>🪄 Dein Zauberwort</legend>
+            <label>Ein Fantasiewort, das in der Geschichte vorkommt
+              <input type="text" name="fantasyWord" required maxlength="20" placeholder="z. B. Blibberwupp" />
+            </label>
           </fieldset>
 
           <div class="form-actions">

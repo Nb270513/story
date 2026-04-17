@@ -15,9 +15,49 @@
   const emptyInputs = () => ({
     name1: "", name2: "", name3: "", name4: "", name5: "",
     color: "", animal: "", place: "", food: "", item: "",
-    fantasyWord: "", fear: "",
-    superpower: "", vehicle: "", weather: "", sound: "",
+    fear: "", fantasyWord: "",
   });
+
+  // Quick-Pick-Optionen pro Chip-Feld. Format: { value, emoji }.
+  // Der "value" landet im Story-Text (Platzhalter-Ersetzung), das Emoji ist Deko.
+  const CHIP_OPTIONS = {
+    color: [
+      { v: "Rot",    e: "🔴" },
+      { v: "Blau",   e: "🔵" },
+      { v: "Grün",   e: "🟢" },
+      { v: "Lila",   e: "🟣" },
+    ],
+    animal: [
+      { v: "Fuchs",  e: "🦊" },
+      { v: "Eule",   e: "🦉" },
+      { v: "Drache", e: "🐉" },
+      { v: "Löwe",   e: "🦁" },
+    ],
+    place: [
+      { v: "Park",     e: "🌳" },
+      { v: "Strand",   e: "🏖️" },
+      { v: "Berg",     e: "🏔️" },
+      { v: "Schloss",  e: "🏰" },
+    ],
+    food: [
+      { v: "Pizza",      e: "🍕" },
+      { v: "Pasta",      e: "🍝" },
+      { v: "Burger",     e: "🍔" },
+      { v: "Schokolade", e: "🍫" },
+    ],
+    item: [
+      { v: "Schlüssel",      e: "🗝️" },
+      { v: "Kristallkugel",  e: "🔮" },
+      { v: "Kompass",        e: "🧭" },
+      { v: "Schatzkarte",    e: "🗺️" },
+    ],
+    fear: [
+      { v: "Spinnen",          e: "🕷️" },
+      { v: "Geister",          e: "👻" },
+      { v: "tiefem Wasser",    e: "🌊" },
+      { v: "der Dunkelheit",   e: "🌑" },
+    ],
+  };
 
   const state = {
     inputs: emptyInputs(),
@@ -39,7 +79,13 @@
       if (!raw) return;
       const parsed = JSON.parse(raw);
       if (parsed && typeof parsed === "object") {
-        Object.assign(state.inputs, parsed.inputs || {});
+        // Nur bekannte Keys aus emptyInputs() uebernehmen (alte Felder wie
+        // 'superpower' oder 'vehicle' werden dabei sauber verworfen).
+        const known = Object.keys(state.inputs);
+        const savedInputs = parsed.inputs || {};
+        known.forEach((k) => {
+          if (typeof savedInputs[k] === "string") state.inputs[k] = savedInputs[k];
+        });
         state.currentSceneId = parsed.currentSceneId || "start";
         state.history = Array.isArray(parsed.history) ? parsed.history : [];
         state.screen = parsed.screen || "start";
@@ -77,16 +123,61 @@
   // ---------- Input-Screen ----------
   const form = document.getElementById("form-input");
 
+  // Chips einmal aufbauen und per Delegation auf Klicks hoeren.
+  function buildChips() {
+    Object.keys(CHIP_OPTIONS).forEach((field) => {
+      const container = form.querySelector(`.chips[data-field="${field}"]`);
+      if (!container) return;
+      container.innerHTML = "";
+      CHIP_OPTIONS[field].forEach((opt) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "chip";
+        btn.dataset.field = field;
+        btn.dataset.value = opt.v;
+        btn.innerHTML = `<span class="chip-emoji">${opt.e}</span><span class="chip-text">${opt.v}</span>`;
+        btn.addEventListener("click", () => selectChip(field, opt.v));
+        container.appendChild(btn);
+      });
+    });
+  }
+
+  function selectChip(field, value) {
+    state.inputs[field] = value;
+    const group = form.querySelector(`.chips[data-field="${field}"]`);
+    if (!group) return;
+    group.classList.remove("has-error");
+    group.querySelectorAll(".chip").forEach((c) => {
+      c.classList.toggle("is-selected", c.dataset.value === value);
+    });
+  }
+
+  // Setzt Textinputs UND Chip-Auswahl aus dem aktuellen State.
+  // Versucht auch fuzzy-Match (case-insensitive), damit alte gespeicherte
+  // Freitext-Eingaben auf den passenden Chip abgebildet werden.
   function fillFormFromState() {
     Object.keys(state.inputs).forEach((key) => {
       const el = form.elements.namedItem(key);
       if (el) el.value = state.inputs[key] || "";
     });
+    Object.keys(CHIP_OPTIONS).forEach((field) => {
+      const value = (state.inputs[field] || "").trim().toLowerCase();
+      if (!value) return;
+      const match = CHIP_OPTIONS[field].find((o) => o.v.toLowerCase() === value);
+      if (match) {
+        selectChip(field, match.v);
+      } else {
+        // Passt nicht mehr zum neuen Chip-Set -> leeren, User muss neu waehlen
+        state.inputs[field] = "";
+      }
+    });
   }
 
+  // Liest Textfelder; Chip-Werte sind bereits live in state.inputs drin.
   function collectInputs() {
     const data = new FormData(form);
     Object.keys(state.inputs).forEach((key) => {
+      if (key in CHIP_OPTIONS) return; // Chip-Wert bereits gesetzt
       const raw = data.get(key);
       state.inputs[key] = (raw || "").toString().trim();
     });
@@ -258,7 +349,11 @@
     e.preventDefault();
     collectInputs();
     if (!inputsComplete()) {
-      // HTML5-Validierung triggert selbst; hier nur als Fallback
+      // Fehlende Chip-Auswahl visuell markieren
+      Object.keys(CHIP_OPTIONS).forEach((field) => {
+        const group = form.querySelector(`.chips[data-field="${field}"]`);
+        if (group) group.classList.toggle("has-error", !state.inputs[field]);
+      });
       form.reportValidity();
       return;
     }
@@ -274,6 +369,7 @@
 
   // ---------- Initialisierung ----------
   loadState();
+  buildChips();
   fillFormFromState();
 
   // Beim Neuladen dort weitermachen, wo man war.
