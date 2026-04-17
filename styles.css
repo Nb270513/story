@@ -268,68 +268,64 @@ body {
   text-align: right;
 }
 
-.scene-icon {
-  font-size: 44px;
-  text-align: center;
-  position: absolute;
-  right: 14px;
-  bottom: 10px;
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
-  pointer-events: none;
-}
-
-/* Bild-Wrapper: Container mit fester Ratio, damit Layout nicht springt */
-.scene-image-wrap {
+/* Szenen-Collage: Gradient-Hintergrund mit Hero-Emoji + kleinen Items.
+   Sofort sichtbar, kein Netzwerk, kein Flackern. */
+.scene-art {
   position: relative;
+  isolation: isolate;
   width: 100%;
   aspect-ratio: 2 / 1;
   border-radius: var(--radius-md);
   overflow: hidden;
   margin-bottom: 18px;
-  background: linear-gradient(135deg, #fbe5d6, #ffd4e6, #d6ecff);
+  background: linear-gradient(135deg, #ffd4b8, #c9e4ff);
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.08);
 }
 
-.scene-image-wrap--end {
-  margin: 0 0 18px;
-}
-
-.scene-image {
+.scene-art::before {
+  /* sanfter Vignetten-Overlay, damit Emojis besser lesbar sind */
+  content: "";
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transition: opacity 0.5s ease;
-  display: block;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.18) 0%,
+    rgba(0, 0, 0, 0.08) 100%
+  );
+  pointer-events: none;
 }
 
-.scene-image.is-loaded {
-  opacity: 1;
-}
-
-/* Lade-Skelett: sanft schimmernder Gradient */
-.scene-image-skeleton {
+.art-hero {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 0) 0%,
-    rgba(255, 255, 255, 0.55) 50%,
-    rgba(255, 255, 255, 0) 100%
-  ),
-  linear-gradient(135deg, #ffd4b8, #ffc6de, #c9e4ff);
-  background-size: 200% 100%, 100% 100%;
-  animation: shimmer 1.6s linear infinite;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: clamp(90px, 18vw, 150px);
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.25));
+  animation: heroFloat 3.6s ease-in-out infinite;
+  line-height: 1;
 }
 
-@keyframes shimmer {
-  0%   { background-position: -150% 0, 0 0; }
-  100% { background-position:  150% 0, 0 0; }
+.art-item {
+  position: absolute;
+  font-size: clamp(32px, 6vw, 48px);
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.2));
+  animation: itemFloat 4.2s ease-in-out infinite both;
+  line-height: 1;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+  50%      { transform: translate(-50%, -50%) translateY(-8px); }
+}
+
+@keyframes itemFloat {
+  0%, 100% { transform: translate(-50%, -50%) rotate(var(--r, 0)) translateY(0); }
+  50%      { transform: translate(-50%, -50%) rotate(var(--r, 0)) translateY(-6px); }
 }
 
 /* bei jedem Szenenwechsel neu animieren */
-.card--story.is-fading .scene-image-wrap,
+.card--story.is-fading .scene-art,
 .card--story.is-fading .scene-text,
 .card--story.is-fading .choices {
   animation: fadeInUp 0.4s ease both;

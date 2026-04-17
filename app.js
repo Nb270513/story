@@ -97,52 +97,51 @@
   }
 
   // ---------- Szenen rendern ----------
-  const sceneIconEl        = document.getElementById("scene-icon");
   const sceneTextEl        = document.getElementById("scene-text");
-  const sceneImageEl       = document.getElementById("scene-image");
-  const sceneSkeletonEl    = document.getElementById("scene-image-skeleton");
+  const sceneArtEl         = document.getElementById("scene-art");
   const choicesEl          = document.getElementById("scene-choices");
   const progressFill       = document.getElementById("progress-fill");
   const progressText       = document.getElementById("progress-text");
   const storyCard          = document.getElementById("story-card");
 
-  // ---------- Bild-Generierung (pollinations.ai) ----------
-  // Erzeugt eine URL, die ein KI-Bild zum Prompt liefert. Deterministisch per
-  // Szenen-ID + erstem Namen, damit derselbe Spieler bei derselben Szene
-  // immer dasselbe Bild sieht (und die Geschichte konsistent wirkt).
-  function hashString(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = ((h << 5) - h) + str.charCodeAt(i);
-      h |= 0;
+  // ---------- Szenen-Art (Emoji-Collage) ----------
+  // Rendert den Szenen-Hintergrund: Gradient + grosses Hero-Emoji in der Mitte
+  // + mehrere kleine Items drumherum. Positionen werden pseudo-zufaellig
+  // (aber deterministisch per Index) gesetzt, damit jede Szene einzigartig aussieht.
+  function renderSceneArt(artEl, art) {
+    if (!artEl || !art) return;
+    artEl.style.background = art.gradient || "linear-gradient(135deg, #ffd4b8, #c9e4ff)";
+    artEl.innerHTML = "";
+
+    // Hero-Emoji, gross und mittig
+    if (art.hero) {
+      const hero = document.createElement("div");
+      hero.className = "art-hero";
+      hero.textContent = art.hero;
+      artEl.appendChild(hero);
     }
-    return Math.abs(h);
-  }
 
-  function buildImageUrl(sceneId, prompt, width = 800, height = 420) {
-    const style = window.STORY.imageStyle || "";
-    const fullPrompt = substitute(style + prompt);
-    const seed = hashString(sceneId + "|" + (state.inputs.name1 || ""));
-    const encoded = encodeURIComponent(fullPrompt);
-    return `https://image.pollinations.ai/prompt/${encoded}`
-         + `?width=${width}&height=${height}&nologo=true&seed=${seed}`;
-  }
-
-  // Setzt ein Bild mit Skeleton-Ladezustand. Bei Fehler wird nur das Emoji gezeigt.
-  function setSceneImage(imgEl, skeletonEl, sceneId, prompt) {
-    if (!prompt) {
-      imgEl.style.display = "none";
-      skeletonEl.style.display = "none";
-      return;
-    }
-    imgEl.style.display = "";
-    imgEl.classList.remove("is-loaded");
-    skeletonEl.style.display = "";
-
-    const url = buildImageUrl(sceneId, prompt);
-    imgEl.onload  = () => { imgEl.classList.add("is-loaded"); skeletonEl.style.display = "none"; };
-    imgEl.onerror = () => { imgEl.style.display = "none";     skeletonEl.style.display = "none"; };
-    imgEl.src = url;
+    // Items: in 6 vordefinierten Slots rund um die Szene platziert, damit
+    // nichts in der Mitte mit dem Hero kollidiert.
+    const slots = [
+      { x: 10, y: 18, r: -8,  s: 1.1 },
+      { x: 82, y: 22, r:  10, s: 0.95 },
+      { x: 12, y: 72, r:  6,  s: 1.0 },
+      { x: 84, y: 70, r: -12, s: 1.05 },
+      { x: 48, y: 14, r:  0,  s: 0.9 },
+      { x: 48, y: 84, r:  4,  s: 0.9 },
+    ];
+    (art.items || []).slice(0, slots.length).forEach((ch, i) => {
+      const slot = slots[i];
+      const el = document.createElement("div");
+      el.className = "art-item";
+      el.textContent = ch;
+      el.style.left = slot.x + "%";
+      el.style.top  = slot.y + "%";
+      el.style.transform = `translate(-50%, -50%) rotate(${slot.r}deg) scale(${slot.s})`;
+      el.style.animationDelay = (i * 0.15) + "s";
+      artEl.appendChild(el);
+    });
   }
 
   function renderScene(sceneId) {
@@ -170,9 +169,8 @@
     void storyCard.offsetWidth;
     storyCard.classList.add("is-fading");
 
-    sceneIconEl.textContent = scene.icon || "✨";
     sceneTextEl.textContent = substitute(scene.text);
-    setSceneImage(sceneImageEl, sceneSkeletonEl, sceneId, scene.imagePrompt);
+    renderSceneArt(sceneArtEl, scene.art);
 
     // Choice-Buttons bauen
     choicesEl.innerHTML = "";
@@ -205,11 +203,10 @@
   }
 
   // ---------- Ende-Screen ----------
-  const endIconEl        = document.getElementById("end-icon");
-  const endLabelEl       = document.getElementById("end-label");
-  const endTextEl        = document.getElementById("end-text");
-  const endImageEl       = document.getElementById("end-image");
-  const endSkeletonEl    = document.getElementById("end-image-skeleton");
+  const endIconEl     = document.getElementById("end-icon");
+  const endLabelEl    = document.getElementById("end-label");
+  const endTextEl     = document.getElementById("end-text");
+  const endArtEl      = document.getElementById("end-art");
 
   function renderEnding(scene) {
     const meta = (window.STORY.endings && window.STORY.endings[scene.ending]) || {
@@ -219,7 +216,7 @@
     endIconEl.textContent  = meta.icon;
     endLabelEl.textContent = meta.label;
     endTextEl.textContent  = substitute(scene.text);
-    setSceneImage(endImageEl, endSkeletonEl, state.currentSceneId, scene.imagePrompt);
+    renderSceneArt(endArtEl, scene.art);
     showScreen("end");
   }
 

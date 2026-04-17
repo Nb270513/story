@@ -2,15 +2,14 @@
 // Story-Daten: Szenen-Graph fuer das Abenteuer.
 //
 // Jede Szene hat:
-//   - text:         Szenentext mit Platzhaltern ({name1}, {color}, ...).
-//                   Hinweis: Farbe immer PRAEDIKATIV verwenden ("leuchtet {color}"),
-//                   nicht attributiv ("ein {color} Stein"), damit es grammatikalisch
-//                   stimmt, wenn der Nutzer z. B. "gruen" eintippt.
-//   - icon:         kleines Emoji als Szenen-Illustration.
-//   - imagePrompt:  englischer Prompt fuer die KI-Bildgenerierung (pollinations.ai).
-//                   Platzhalter werden genauso ersetzt wie im Text.
-//   - choices:      Liste von { label, next }. Entfaellt bei Endungen.
-//   - ending:       Ende-Typ (mutig|lustig|ueberraschend|geheimnisvoll).
+//   - text:     Szenentext mit Platzhaltern ({name1}, {color}, ...).
+//               Hinweis: Farbe immer PRAEDIKATIV verwenden ("leuchtet {color}"),
+//               nicht attributiv ("ein {color} Stein"), damit die Grammatik stimmt.
+//   - art:      Visuelles Szenenbild — Gradient-Hintergrund + Emojis als Collage.
+//               { gradient: "linear-gradient(...)", hero: "🌲", items: ["🦊", "🌳"] }
+//   - icon:     kleines Badge-Emoji in der Bild-Ecke.
+//   - choices:  Liste von { label, next }. Entfaellt bei Endungen.
+//   - ending:   Ende-Typ (mutig|lustig|ueberraschend|geheimnisvoll).
 // ==========================================================================
 
 window.STORY = {
@@ -22,16 +21,16 @@ window.STORY = {
     geheimnisvoll:  { icon: "🔮", label: "Geheimnisvolles Ende" },
   },
 
-  // Basis-Prompt, der vor jeden szenen-spezifischen Prompt gesetzt wird.
-  // Sorgt dafuer, dass alle Bilder einen einheitlichen, kindgerechten Stil haben.
-  imageStyle: "cute children's storybook illustration, soft pastel colors, warm lighting, whimsical, magical, friendly atmosphere, digital painting, ",
-
   // Alle Szenen. Einstieg: "start".
   scenes: {
     // ---------- START ----------
     start: {
       icon: "🌅",
-      imagePrompt: "a group of happy children sitting at {place}, eating {food}, a small {animal} in {color} color runs by, sunny magical afternoon",
+      art: {
+        gradient: "linear-gradient(135deg, #ffb88c 0%, #ff8e72 50%, #ffd6a5 100%)",
+        hero: "🌅",
+        items: ["🧺", "🍕", "🦊", "🌿"],
+      },
       text:
         "{name1}, {name2} und {name3} sitzen an ihrem Lieblingsplatz: {place}. " +
         "Sie essen gerade {food}, als plötzlich ein {animal} vorbeihuscht — " +
@@ -46,7 +45,11 @@ window.STORY = {
     // ---------- ZWEIG A: WALD ----------
     wald: {
       icon: "🌲",
-      imagePrompt: "dark enchanted forest with glowing path, whispering leaves, a small {animal} leading children, two paths splitting, cave on one side, river on the other",
+      art: {
+        gradient: "linear-gradient(160deg, #1f4d3a 0%, #2d6e52 55%, #5aa17a 100%)",
+        hero: "🌲",
+        items: ["🌳", "🌲", "🍃", "🦊", "✨"],
+      },
       text:
         "Der Wald ist dunkel und voller wispernder Blätter. {name4} hat etwas " +
         "Angst vor {fear}, aber {name1} sagt mutig: \"Wir schaffen das!\" " +
@@ -60,7 +63,11 @@ window.STORY = {
 
     hoehle: {
       icon: "🕳️",
-      imagePrompt: "inside a magical glowing crystal cave, a large crystal shining in {color}, whispering, children exploring with wide eyes",
+      art: {
+        gradient: "linear-gradient(180deg, #2a1b4a 0%, #4b2e82 55%, #8a5fd6 100%)",
+        hero: "💎",
+        items: ["✨", "⭐", "🕯️", "✨"],
+      },
       text:
         "In der Höhle funkelt ein riesiger Kristall an der Decke — er leuchtet " +
         "komplett in {color}! {name2} hält {item} fest in der Hand — und plötzlich " +
@@ -73,7 +80,11 @@ window.STORY = {
 
     fluss: {
       icon: "🌊",
-      imagePrompt: "rushing magical river in a forest, a small leaf-boat on the water that is glowing and growing magically, children watching in wonder",
+      art: {
+        gradient: "linear-gradient(170deg, #3aa7d4 0%, #7cc8e8 55%, #b8e6f2 100%)",
+        hero: "🌊",
+        items: ["🍃", "🌿", "🐟", "💧"],
+      },
       text:
         "Am Fluss sehen die Freunde ein kleines Boot aus Blättern. " +
         "{name3} lacht: \"Das ist so winzig, dass wir da nie reinpassen!\" " +
@@ -86,7 +97,11 @@ window.STORY = {
 
     bruecke: {
       icon: "🌉",
-      imagePrompt: "rickety wooden rope bridge over a magical glowing river at sunset, a mysterious hooded figure waiting on the other side, children on a leaf boat arriving",
+      art: {
+        gradient: "linear-gradient(180deg, #ffad84 0%, #ff8b5c 45%, #6c4a8a 100%)",
+        hero: "🌉",
+        items: ["☁️", "👤", "✨", "🌅"],
+      },
       text:
         "Das Boot bringt sie zu einer wackeligen Brücke. Auf der anderen Seite " +
         "steht jemand, der ruft: \"{fantasyWord}, meine Freunde!\" " +
@@ -100,7 +115,11 @@ window.STORY = {
     // ---------- ZWEIG B: DORF ----------
     dorf: {
       icon: "🏘️",
-      imagePrompt: "colorful medieval fantasy village market, smells of {food}, an old friendly merchant pointing at two paths, a tall tower in distance and a bazaar",
+      art: {
+        gradient: "linear-gradient(170deg, #f4c685 0%, #e79b5a 55%, #b06b42 100%)",
+        hero: "🏘️",
+        items: ["🍞", "🧺", "🎪", "🌻"],
+      },
       text:
         "Im Dorf ist heute Markt. Es riecht überall nach {food}. " +
         "Ein alter Händler winkt {name1} und {name2} zu und zeigt auf zwei Wege: " +
@@ -113,7 +132,11 @@ window.STORY = {
 
     turm: {
       icon: "🗼",
-      imagePrompt: "tall mysterious fantasy tower reaching into the clouds, small wooden door with a scroll attached, children looking up in wonder",
+      art: {
+        gradient: "linear-gradient(180deg, #8eb9e0 0%, #c9dcf0 50%, #f0f5fc 100%)",
+        hero: "🗼",
+        items: ["☁️", "☁️", "✨", "🦅"],
+      },
       text:
         "Der Turm ist so hoch, dass seine Spitze in den Wolken verschwindet. " +
         "Neben der Tür klebt ein Zettel: \"Nur wer {fantasyWord} ruft, darf hinauf.\" " +
@@ -126,7 +149,11 @@ window.STORY = {
 
     basar: {
       icon: "🛒",
-      imagePrompt: "colorful fantasy bazaar full of strange magical items, a friendly merchant holding a treasure map, children whispering excitedly",
+      art: {
+        gradient: "linear-gradient(135deg, #d96eb0 0%, #f7a74a 50%, #f7d768 100%)",
+        hero: "🛒",
+        items: ["🗺️", "💰", "🎈", "🫙", "💎"],
+      },
       text:
         "Der Basar ist voller Stände mit seltsamen Dingen. Ein Verkäufer " +
         "möchte {item} gegen eine Karte eintauschen, die angeblich zu einem Schatz führt. " +
@@ -141,7 +168,11 @@ window.STORY = {
     ending_mystery: {
       icon: "🔮",
       ending: "geheimnisvoll",
-      imagePrompt: "magical swirling stardust cave dissolving around children, a tiny crystal shard that shimmers in {color} color, dreamlike ending, mysterious",
+      art: {
+        gradient: "linear-gradient(135deg, #2a1b66 0%, #6a3dbb 50%, #b487e8 100%)",
+        hero: "🔮",
+        items: ["✨", "⭐", "💎", "🌟", "✨"],
+      },
       text:
         "Als {name2} den Kristall berührt, löst sich die ganze Höhle in Sternenstaub auf. " +
         "Plötzlich stehen alle wieder an ihrem Lieblingsplatz {place} — aber in {name1}s Tasche " +
@@ -152,7 +183,11 @@ window.STORY = {
     ending_funny: {
       icon: "😂",
       ending: "lustig",
-      imagePrompt: "children laughing and splashing in a shallow river, all soaked, a small {animal} laughing too, birds flying up, sunny funny moment",
+      art: {
+        gradient: "linear-gradient(150deg, #6ecaf0 0%, #a6e2f5 50%, #fff2b8 100%)",
+        hero: "😂",
+        items: ["💦", "🐟", "🦊", "🎉", "💧"],
+      },
       text:
         "{name3} springt ins Wasser — und platsch! Der Fluss ist nur knietief. " +
         "Das {animal}, dessen Fell {color} leuchtet, lacht so laut, dass alle " +
@@ -164,7 +199,11 @@ window.STORY = {
     ending_brave: {
       icon: "🦁",
       ending: "mutig",
-      imagePrompt: "brave children walking proudly together, holding a glowing golden certificate with their names, triumphant sunset, heroic",
+      art: {
+        gradient: "linear-gradient(135deg, #ff9a3c 0%, #ffd76a 50%, #fff0a8 100%)",
+        hero: "🦁",
+        items: ["🏆", "⭐", "✨", "🏅"],
+      },
       text:
         "{name1} geht voraus, {name2} und {name4} folgen ohne zu zögern. " +
         "Obwohl {name4} Angst vor {fear} hat, geht er einfach trotzdem weiter — " +
@@ -175,7 +214,11 @@ window.STORY = {
     ending_ueberraschend: {
       icon: "🎉",
       ending: "ueberraschend",
-      imagePrompt: "a child pulling back a cloak to reveal themselves as a grown-up future version of themselves, glowing stone in their hand, time-travel magical moment",
+      art: {
+        gradient: "linear-gradient(135deg, #ff6aa0 0%, #ffa85c 50%, #8ae0ff 100%)",
+        hero: "🎉",
+        items: ["✨", "🪄", "💫", "⭐", "🎊"],
+      },
       text:
         "Die Person auf der Brücke lacht und zieht die Kapuze zurück — es ist {name5} selbst " +
         "aus der Zukunft! \"Ich bin gekommen, um euch zu sagen: Ihr werdet berühmte Entdecker!\" " +
@@ -186,7 +229,11 @@ window.STORY = {
     ending_lustig: {
       icon: "😂",
       ending: "lustig",
-      imagePrompt: "huge festive village feast with everyone dancing, tables full of {food}, a {animal} dancing too, joyful celebration",
+      art: {
+        gradient: "linear-gradient(135deg, #ff8ec7 0%, #ffc46a 50%, #a8e88a 100%)",
+        hero: "🎊",
+        items: ["🍕", "🍰", "🕺", "💃", "🎈", "🎉"],
+      },
       text:
         "Statt der Schatzkarte kaufen die Freunde jede Menge {food} für alle im Dorf. " +
         "Plötzlich tanzen alle Händler und selbst das {animal} wackelt im Takt mit! " +
