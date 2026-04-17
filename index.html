@@ -87,7 +87,12 @@
           <span class="progress-text" id="progress-text">Szene 1</span>
         </div>
 
-        <div class="scene-icon" id="scene-icon">🌅</div>
+        <div class="scene-image-wrap">
+          <div class="scene-image-skeleton" id="scene-image-skeleton"></div>
+          <img class="scene-image" id="scene-image" alt="Szenenbild" />
+          <div class="scene-icon" id="scene-icon">🌅</div>
+        </div>
+
         <p class="scene-text" id="scene-text"></p>
 
         <div class="choices" id="scene-choices"></div>
@@ -101,6 +106,10 @@
     <!-- =================== ENDE-SCREEN =================== -->
     <section id="screen-end" class="screen">
       <div class="card card--center">
+        <div class="scene-image-wrap scene-image-wrap--end">
+          <div class="scene-image-skeleton" id="end-image-skeleton"></div>
+          <img class="scene-image" id="end-image" alt="Ende-Bild" />
+        </div>
         <div class="big-emoji" id="end-icon">🎉</div>
         <h2 class="title title--sm" id="end-label">Ende</h2>
         <p class="scene-text" id="end-text"></p>

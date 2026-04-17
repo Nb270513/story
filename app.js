@@ -97,12 +97,53 @@
   }
 
   // ---------- Szenen rendern ----------
-  const sceneIconEl   = document.getElementById("scene-icon");
-  const sceneTextEl   = document.getElementById("scene-text");
-  const choicesEl     = document.getElementById("scene-choices");
-  const progressFill  = document.getElementById("progress-fill");
-  const progressText  = document.getElementById("progress-text");
-  const storyCard     = document.getElementById("story-card");
+  const sceneIconEl        = document.getElementById("scene-icon");
+  const sceneTextEl        = document.getElementById("scene-text");
+  const sceneImageEl       = document.getElementById("scene-image");
+  const sceneSkeletonEl    = document.getElementById("scene-image-skeleton");
+  const choicesEl          = document.getElementById("scene-choices");
+  const progressFill       = document.getElementById("progress-fill");
+  const progressText       = document.getElementById("progress-text");
+  const storyCard          = document.getElementById("story-card");
+
+  // ---------- Bild-Generierung (pollinations.ai) ----------
+  // Erzeugt eine URL, die ein KI-Bild zum Prompt liefert. Deterministisch per
+  // Szenen-ID + erstem Namen, damit derselbe Spieler bei derselben Szene
+  // immer dasselbe Bild sieht (und die Geschichte konsistent wirkt).
+  function hashString(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+      h = ((h << 5) - h) + str.charCodeAt(i);
+      h |= 0;
+    }
+    return Math.abs(h);
+  }
+
+  function buildImageUrl(sceneId, prompt, width = 800, height = 420) {
+    const style = window.STORY.imageStyle || "";
+    const fullPrompt = substitute(style + prompt);
+    const seed = hashString(sceneId + "|" + (state.inputs.name1 || ""));
+    const encoded = encodeURIComponent(fullPrompt);
+    return `https://image.pollinations.ai/prompt/${encoded}`
+         + `?width=${width}&height=${height}&nologo=true&seed=${seed}`;
+  }
+
+  // Setzt ein Bild mit Skeleton-Ladezustand. Bei Fehler wird nur das Emoji gezeigt.
+  function setSceneImage(imgEl, skeletonEl, sceneId, prompt) {
+    if (!prompt) {
+      imgEl.style.display = "none";
+      skeletonEl.style.display = "none";
+      return;
+    }
+    imgEl.style.display = "";
+    imgEl.classList.remove("is-loaded");
+    skeletonEl.style.display = "";
+
+    const url = buildImageUrl(sceneId, prompt);
+    imgEl.onload  = () => { imgEl.classList.add("is-loaded"); skeletonEl.style.display = "none"; };
+    imgEl.onerror = () => { imgEl.style.display = "none";     skeletonEl.style.display = "none"; };
+    imgEl.src = url;
+  }
 
   function renderScene(sceneId) {
     const scene = window.STORY.scenes[sceneId];
@@ -131,6 +172,7 @@
 
     sceneIconEl.textContent = scene.icon || "✨";
     sceneTextEl.textContent = substitute(scene.text);
+    setSceneImage(sceneImageEl, sceneSkeletonEl, sceneId, scene.imagePrompt);
 
     // Choice-Buttons bauen
     choicesEl.innerHTML = "";
@@ -163,9 +205,11 @@
   }
 
   // ---------- Ende-Screen ----------
-  const endIconEl   = document.getElementById("end-icon");
-  const endLabelEl  = document.getElementById("end-label");
-  const endTextEl   = document.getElementById("end-text");
+  const endIconEl        = document.getElementById("end-icon");
+  const endLabelEl       = document.getElementById("end-label");
+  const endTextEl        = document.getElementById("end-text");
+  const endImageEl       = document.getElementById("end-image");
+  const endSkeletonEl    = document.getElementById("end-image-skeleton");
 
   function renderEnding(scene) {
     const meta = (window.STORY.endings && window.STORY.endings[scene.ending]) || {
@@ -175,6 +219,7 @@
     endIconEl.textContent  = meta.icon;
     endLabelEl.textContent = meta.label;
     endTextEl.textContent  = substitute(scene.text);
+    setSceneImage(endImageEl, endSkeletonEl, state.currentSceneId, scene.imagePrompt);
     showScreen("end");
   }
 

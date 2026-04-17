@@ -269,13 +269,67 @@ body {
 }
 
 .scene-icon {
-  font-size: 64px;
+  font-size: 44px;
   text-align: center;
-  margin: 6px 0 14px;
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+  pointer-events: none;
+}
+
+/* Bild-Wrapper: Container mit fester Ratio, damit Layout nicht springt */
+.scene-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  margin-bottom: 18px;
+  background: linear-gradient(135deg, #fbe5d6, #ffd4e6, #d6ecff);
+}
+
+.scene-image-wrap--end {
+  margin: 0 0 18px;
+}
+
+.scene-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  display: block;
+}
+
+.scene-image.is-loaded {
+  opacity: 1;
+}
+
+/* Lade-Skelett: sanft schimmernder Gradient */
+.scene-image-skeleton {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  ),
+  linear-gradient(135deg, #ffd4b8, #ffc6de, #c9e4ff);
+  background-size: 200% 100%, 100% 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: -150% 0, 0 0; }
+  100% { background-position:  150% 0, 0 0; }
 }
 
 /* bei jedem Szenenwechsel neu animieren */
-.card--story.is-fading .scene-icon,
+.card--story.is-fading .scene-image-wrap,
 .card--story.is-fading .scene-text,
 .card--story.is-fading .choices {
   animation: fadeInUp 0.4s ease both;
