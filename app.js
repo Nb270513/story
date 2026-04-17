@@ -95,9 +95,24 @@
 
   // ---------- Platzhalter-Ersetzung ----------
   // Ersetzt {key} im Text durch state.inputs[key].
+  // Sonderfall fuer {name1}..{name5}: wenn ein Name-Slot leer ist, wird zyklisch
+  // durch die ausgefuellten Namen rotiert — so funktionieren Geschichten mit
+  // nur 2 oder 3 Namen genauso wie mit 5.
   function substitute(text) {
     if (!text) return "";
+    const filledNames = [1, 2, 3, 4, 5]
+      .map((i) => (state.inputs["name" + i] || "").trim())
+      .filter((n) => n.length > 0);
+
     return text.replace(/\{(\w+)\}/g, (match, key) => {
+      const nameMatch = /^name([1-5])$/.exec(key);
+      if (nameMatch) {
+        const own = (state.inputs[key] || "").trim();
+        if (own) return own;
+        if (filledNames.length === 0) return match;
+        const idx = parseInt(nameMatch[1], 10) - 1;
+        return filledNames[idx % filledNames.length];
+      }
       const value = state.inputs[key];
       return value ? value : match;
     });
@@ -183,8 +198,15 @@
     });
   }
 
+  // Pflichtfelder fuer "Abenteuer starten". name3-5 sind optional.
+  const REQUIRED_FIELDS = [
+    "name1", "name2",
+    "color", "animal", "place", "food", "item", "fear",
+    "fantasyWord",
+  ];
+
   function inputsComplete() {
-    return Object.values(state.inputs).every((v) => v && v.length > 0);
+    return REQUIRED_FIELDS.every((k) => (state.inputs[k] || "").trim().length > 0);
   }
 
   // ---------- Szenen rendern ----------

@@ -181,6 +181,24 @@ body {
   color: var(--color-primary);
 }
 
+.legend-hint {
+  font-family: var(--ff-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--color-muted);
+  margin-left: 4px;
+}
+
+.label-optional {
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--color-muted);
+  background: rgba(90, 79, 122, 0.1);
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-left: 4px;
+}
+
 .grid {
   display: grid;
   gap: 14px;
