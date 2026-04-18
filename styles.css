@@ -381,9 +381,27 @@ body {
   background: radial-gradient(
     ellipse at center,
     rgba(255, 255, 255, 0.18) 0%,
-    rgba(0, 0, 0, 0.08) 100%
+    rgba(0, 0, 0, 0.2) 100%
   );
   pointer-events: none;
+  z-index: 2;
+}
+
+/* Foto-Overlay: fadet ein, liegt zwischen Gradient und Emojis. Der Vignette-
+   Overlay (z-index 2) gibt dem Foto Tiefe und macht Emojis gut lesbar. */
+.art-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  z-index: 1;
+}
+
+.art-photo.is-loaded {
+  opacity: 1;
 }
 
 .art-hero {
@@ -392,17 +410,19 @@ body {
   top: 50%;
   transform: translate(-50%, -50%);
   font-size: clamp(90px, 18vw, 150px);
-  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.25));
+  filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.55));
   animation: heroFloat 3.6s ease-in-out infinite;
   line-height: 1;
+  z-index: 3;
 }
 
 .art-item {
   position: absolute;
   font-size: clamp(32px, 6vw, 48px);
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.55));
   animation: itemFloat 4.2s ease-in-out infinite both;
   line-height: 1;
+  z-index: 3;
 }
 
 @keyframes heroFloat {

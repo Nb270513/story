@@ -234,10 +234,39 @@
     return match ? match.e : "";
   }
 
-  function renderSceneArt(artEl, art) {
+  // Deterministische URL fuer Lorem Flickr: gleiche Szene -> gleiches Foto.
+  function hashStr(str) {
+    let h = 0;
+    for (let i = 0; i < str.length; i++) {
+      h = ((h << 5) - h) + str.charCodeAt(i);
+      h |= 0;
+    }
+    return Math.abs(h);
+  }
+
+  function buildPhotoUrl(sceneId, keywords) {
+    const tags = encodeURIComponent(keywords);
+    return `https://loremflickr.com/800/400/${tags}?lock=${hashStr(sceneId)}`;
+  }
+
+  function renderSceneArt(artEl, art, sceneId, imgKeywords) {
     if (!artEl || !art) return;
     artEl.style.background = art.gradient || "linear-gradient(135deg, #ffd4b8, #c9e4ff)";
     artEl.innerHTML = "";
+
+    // Foto-Overlay: laedt im Hintergrund, fadet ueber den Gradient ein
+    // sobald es da ist. Falls es fehlschlaegt, wird das <img> entfernt und
+    // die Emoji-Collage bleibt sichtbar — progressive enhancement.
+    if (imgKeywords) {
+      const photo = document.createElement("img");
+      photo.className = "art-photo";
+      photo.alt = "";
+      photo.loading = "eager";
+      photo.onload  = () => photo.classList.add("is-loaded");
+      photo.onerror = () => photo.remove();
+      photo.src = buildPhotoUrl(sceneId, imgKeywords);
+      artEl.appendChild(photo);
+    }
 
     // Hero-Emoji, gross und mittig (kann auch ein Token sein)
     const heroChar = resolveArtEmoji(art.hero);
@@ -302,7 +331,7 @@
     storyCard.classList.add("is-fading");
 
     sceneTextEl.textContent = substitute(scene.text);
-    renderSceneArt(sceneArtEl, scene.art);
+    renderSceneArt(sceneArtEl, scene.art, sceneId, scene.img);
 
     // Choice-Buttons bauen
     choicesEl.innerHTML = "";
@@ -348,7 +377,7 @@
     endIconEl.textContent  = meta.icon;
     endLabelEl.textContent = meta.label;
     endTextEl.textContent  = substitute(scene.text);
-    renderSceneArt(endArtEl, scene.art);
+    renderSceneArt(endArtEl, scene.art, state.currentSceneId, scene.img);
     showScreen("end");
   }
 
