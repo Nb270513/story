@@ -97,25 +97,50 @@
   // Ersetzt {key} im Text durch state.inputs[key].
   // Sonderfall fuer {name1}..{name5}: wenn ein Name-Slot leer ist, wird zyklisch
   // durch die ausgefuellten Namen rotiert — so funktionieren Geschichten mit
-  // nur 2 oder 3 Namen genauso wie mit 5.
+  // nur 2 oder 3 Namen genauso wie mit 5. Zusaetzlich versuchen wir, direkt
+  // aufeinanderfolgende Duplikate zu vermeiden, und machen am Ende ein
+  // Post-Processing, das Muster wie "A, B und A" zu "A und B" kuerzt.
   function substitute(text) {
     if (!text) return "";
     const filledNames = [1, 2, 3, 4, 5]
       .map((i) => (state.inputs["name" + i] || "").trim())
       .filter((n) => n.length > 0);
 
-    return text.replace(/\{(\w+)\}/g, (match, key) => {
+    // kuerzlich benutzte Namen, damit Zyklus-Picks nicht direkt wiederholen
+    const recent = [];
+    const pickName = (idx) => {
+      // Eigenen Slot zuerst probieren
+      const own = (state.inputs["name" + (idx + 1)] || "").trim();
+      if (own) return own;
+      if (filledNames.length === 0) return null;
+      // Bevorzugt einen Namen, der nicht in recent ist
+      const fresh = filledNames.filter((n) => !recent.includes(n));
+      if (fresh.length > 0) return fresh[idx % fresh.length];
+      return filledNames[idx % filledNames.length];
+    };
+
+    let replaced = text.replace(/\{(\w+)\}/g, (match, key) => {
       const nameMatch = /^name([1-5])$/.exec(key);
       if (nameMatch) {
-        const own = (state.inputs[key] || "").trim();
-        if (own) return own;
-        if (filledNames.length === 0) return match;
         const idx = parseInt(nameMatch[1], 10) - 1;
-        return filledNames[idx % filledNames.length];
+        const name = pickName(idx);
+        if (!name) return match;
+        recent.push(name);
+        if (recent.length > filledNames.length - 1) recent.shift();
+        return name;
       }
       const value = state.inputs[key];
       return value ? value : match;
     });
+
+    // Post-Processing: "A, B und A" -> "A und B"; "A und A" -> "A"; "A, A" -> "A"
+    const NAME = "([A-Za-zÄÖÜäöüß]+)";
+    replaced = replaced
+      .replace(new RegExp(NAME + ",\\s+" + NAME + "\\s+und\\s+\\1\\b", "g"), "$1 und $2")
+      .replace(new RegExp(NAME + "\\s+und\\s+\\1\\b", "g"), "$1")
+      .replace(new RegExp(NAME + ",\\s+\\1\\b", "g"), "$1");
+
+    return replaced;
   }
 
   // ---------- Screen-Routing ----------
@@ -423,6 +448,14 @@
     renderScene("start");
   });
 
+  document.getElementById("btn-home-story").addEventListener("click", () => {
+    // Zurueck zum Hauptmenue, Eingaben bleiben erhalten — der User kann
+    // jederzeit aussteigen, ohne dass die Eingaben verloren gehen.
+    state.currentSceneId = "start";
+    state.history = [];
+    saveState();
+    showScreen("start");
+  });
   document.getElementById("btn-restart-story").addEventListener("click", restartSameNames);
   document.getElementById("btn-same-names").addEventListener("click", restartSameNames);
   document.getElementById("btn-full-restart").addEventListener("click", fullRestart);
