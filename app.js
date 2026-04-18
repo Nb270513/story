@@ -234,37 +234,27 @@
     return match ? match.e : "";
   }
 
-  // Deterministische URL fuer Lorem Flickr: gleiche Szene -> gleiches Foto.
-  function hashStr(str) {
-    let h = 0;
-    for (let i = 0; i < str.length; i++) {
-      h = ((h << 5) - h) + str.charCodeAt(i);
-      h |= 0;
-    }
-    return Math.abs(h);
-  }
-
-  function buildPhotoUrl(sceneId, keywords) {
-    const tags = encodeURIComponent(keywords);
-    return `https://loremflickr.com/800/400/${tags}?lock=${hashStr(sceneId)}`;
-  }
-
-  function renderSceneArt(artEl, art, sceneId, imgKeywords) {
+  function renderSceneArt(artEl, art, sceneId) {
     if (!artEl || !art) return;
     artEl.style.background = art.gradient || "linear-gradient(135deg, #ffd4b8, #c9e4ff)";
     artEl.innerHTML = "";
 
-    // Foto-Overlay: laedt im Hintergrund, fadet ueber den Gradient ein
-    // sobald es da ist. Falls es fehlschlaegt, wird das <img> entfernt und
-    // die Emoji-Collage bleibt sichtbar — progressive enhancement.
-    if (imgKeywords) {
+    // Szenen-Illustration als lokale Datei (images/<sceneId>.jpg).
+    // Die Bilder wurden einmalig ueber Pollinations.ai generiert und
+    // ins Repo committet — laden damit sofort, keine API-Abhaengigkeit.
+    // Falls eine Datei fehlt (404), entfernt sich das <img> selbst und
+    // die Emoji-Collage bleibt als Fallback sichtbar.
+    if (sceneId) {
       const photo = document.createElement("img");
       photo.className = "art-photo";
       photo.alt = "";
       photo.loading = "eager";
-      photo.onload  = () => photo.classList.add("is-loaded");
+      photo.onload  = () => {
+        photo.classList.add("is-loaded");
+        artEl.classList.add("has-photo"); // blendet die Emoji-Collage aus
+      };
       photo.onerror = () => photo.remove();
-      photo.src = buildPhotoUrl(sceneId, imgKeywords);
+      photo.src = `images/${sceneId}.jpg`;
       artEl.appendChild(photo);
     }
 
@@ -331,7 +321,7 @@
     storyCard.classList.add("is-fading");
 
     sceneTextEl.textContent = substitute(scene.text);
-    renderSceneArt(sceneArtEl, scene.art, sceneId, scene.img);
+    renderSceneArt(sceneArtEl, scene.art, sceneId);
 
     // Choice-Buttons bauen
     choicesEl.innerHTML = "";
@@ -377,7 +367,7 @@
     endIconEl.textContent  = meta.icon;
     endLabelEl.textContent = meta.label;
     endTextEl.textContent  = substitute(scene.text);
-    renderSceneArt(endArtEl, scene.art, state.currentSceneId, scene.img);
+    renderSceneArt(endArtEl, scene.art, state.currentSceneId);
     showScreen("end");
   }
 

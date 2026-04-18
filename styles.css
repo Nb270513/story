@@ -404,6 +404,15 @@ body {
   opacity: 1;
 }
 
+/* Sobald das illustrierte Bild geladen ist, weichen die Emoji-Platzhalter
+   (Hero + Items) sanft — das Bild selbst enthaelt schon die Szene. */
+.scene-art.has-photo .art-hero,
+.scene-art.has-photo .art-item,
+.scene-art.has-photo::before {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
 .art-hero {
   position: absolute;
   left: 50%;

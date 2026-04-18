@@ -5,14 +5,12 @@
 //   - text:     Szenentext mit Platzhaltern ({name1}, {color}, ...).
 //               Hinweis: Farbe immer PRAEDIKATIV verwenden ("leuchtet {color}"),
 //               nicht attributiv ("ein {color} Stein"), damit die Grammatik stimmt.
-//   - art:      Visuelles Szenenbild — Gradient-Hintergrund + Emojis als Collage.
+//   - art:      Fallback-Szenenbild als Gradient + Emoji-Collage.
 //               { gradient: "linear-gradient(...)", hero: "🌲", items: ["🦊", "🌳"] }
 //               Tokens ":feld:" in hero/items werden durch das Emoji der
 //               aktuellen Chip-Auswahl ersetzt (z. B. ":animal:" -> 🐉).
-//   - img:      Komma-getrennte Stichworte fuer Lorem Flickr. Das passende
-//               echte Foto wird als Overlay ins Szenenbild eingeblendet;
-//               Emojis bleiben als Charaktere darauf. Bei Fehler faellt es
-//               sauber auf die reine Emoji-Collage zurueck.
+//               Das eigentliche Szenenbild liegt als images/<sceneId>.jpg im
+//               Repo und ueberblendet die Collage sobald geladen.
 //   - icon:     kleines Badge-Emoji in der Bild-Ecke.
 //   - choices:  Liste von { label, next }. Entfaellt bei Endungen.
 //   - ending:   Ende-Typ (mutig|lustig|ueberraschend|geheimnisvoll).
@@ -32,7 +30,6 @@ window.STORY = {
     // ---------- START ----------
     start: {
       icon: "🌅",
-      img: "sunset,meadow",
       art: {
         // Hero = das Lieblingstier des Nutzers, damit klar ist, was vorbeihuscht.
         gradient: "linear-gradient(135deg, #ffb88c 0%, #ff8e72 50%, #ffd6a5 100%)",
@@ -53,7 +50,6 @@ window.STORY = {
     // ---------- ZWEIG A: WALD ----------
     wald: {
       icon: "🌲",
-      img: "forest,mystical",
       art: {
         gradient: "linear-gradient(160deg, #1f4d3a 0%, #2d6e52 55%, #5aa17a 100%)",
         hero: "🌲",
@@ -72,7 +68,6 @@ window.STORY = {
 
     hoehle: {
       icon: "🕳️",
-      img: "cave,crystal",
       art: {
         gradient: "linear-gradient(180deg, #2a1b4a 0%, #4b2e82 55%, #8a5fd6 100%)",
         hero: "💎",
@@ -90,7 +85,6 @@ window.STORY = {
 
     fluss: {
       icon: "🌊",
-      img: "river,forest",
       art: {
         gradient: "linear-gradient(170deg, #3aa7d4 0%, #7cc8e8 55%, #b8e6f2 100%)",
         hero: "🌊",
@@ -108,7 +102,6 @@ window.STORY = {
 
     bruecke: {
       icon: "🌉",
-      img: "bridge,wooden",
       art: {
         gradient: "linear-gradient(180deg, #ffad84 0%, #ff8b5c 45%, #6c4a8a 100%)",
         hero: "🌉",
@@ -127,7 +120,6 @@ window.STORY = {
     // ---------- ZWEIG B: DORF ----------
     dorf: {
       icon: "🏘️",
-      img: "village,cottage",
       art: {
         gradient: "linear-gradient(170deg, #f4c685 0%, #e79b5a 55%, #b06b42 100%)",
         hero: "🏘️",
@@ -145,7 +137,6 @@ window.STORY = {
 
     turm: {
       icon: "🗼",
-      img: "tower,castle",
       art: {
         gradient: "linear-gradient(180deg, #8eb9e0 0%, #c9dcf0 50%, #f0f5fc 100%)",
         hero: "🗼",
@@ -163,7 +154,6 @@ window.STORY = {
 
     basar: {
       icon: "🛒",
-      img: "bazaar,market",
       art: {
         gradient: "linear-gradient(135deg, #d96eb0 0%, #f7a74a 50%, #f7d768 100%)",
         hero: "🛒",
@@ -183,7 +173,6 @@ window.STORY = {
     ending_mystery: {
       icon: "🔮",
       ending: "geheimnisvoll",
-      img: "stars,galaxy",
       art: {
         gradient: "linear-gradient(135deg, #2a1b66 0%, #6a3dbb 50%, #b487e8 100%)",
         hero: "🔮",
@@ -199,7 +188,6 @@ window.STORY = {
     ending_funny: {
       icon: "😂",
       ending: "lustig",
-      img: "splash,water",
       art: {
         gradient: "linear-gradient(150deg, #6ecaf0 0%, #a6e2f5 50%, #fff2b8 100%)",
         hero: ":animal:",
@@ -216,7 +204,6 @@ window.STORY = {
     ending_brave: {
       icon: "🦁",
       ending: "mutig",
-      img: "trophy,gold",
       art: {
         gradient: "linear-gradient(135deg, #ff9a3c 0%, #ffd76a 50%, #fff0a8 100%)",
         hero: "🏆",
@@ -232,7 +219,6 @@ window.STORY = {
     ending_ueberraschend: {
       icon: "🎉",
       ending: "ueberraschend",
-      img: "fireworks,celebration",
       art: {
         gradient: "linear-gradient(135deg, #ff6aa0 0%, #ffa85c 50%, #8ae0ff 100%)",
         hero: "🎉",
@@ -248,7 +234,6 @@ window.STORY = {
     ending_lustig: {
       icon: "😂",
       ending: "lustig",
-      img: "festival,party",
       art: {
         gradient: "linear-gradient(135deg, #ff8ec7 0%, #ffc46a 50%, #a8e88a 100%)",
         hero: "🎊",
