@@ -14,6 +14,7 @@
   // ---------- State ----------
   const emptyInputs = () => ({
     name1: "", name2: "", name3: "", name4: "", name5: "",
+    group: "",
     color: "", animal: "", place: "", food: "", item: "",
     fear: "", fantasyWord: "",
   });
@@ -21,6 +22,11 @@
   // Quick-Pick-Optionen pro Chip-Feld. Format: { value, emoji }.
   // Der "value" landet im Story-Text (Platzhalter-Ersetzung), das Emoji ist Deko.
   const CHIP_OPTIONS = {
+    group: [
+      { v: "Jungen",   e: "🧒" },
+      { v: "Mädchen",  e: "👧" },
+      { v: "Gemischt", e: "🧑‍🤝‍🧑" },
+    ],
     color: [
       { v: "Rot",    e: "🔴" },
       { v: "Blau",   e: "🔵" },
@@ -226,9 +232,13 @@
   // Pflichtfelder fuer "Abenteuer starten". name3-5 sind optional.
   const REQUIRED_FIELDS = [
     "name1", "name2",
+    "group",
     "color", "animal", "place", "food", "item", "fear",
     "fantasyWord",
   ];
+
+  // Mapping von deutschem Gruppen-Namen auf englisches Dateinamen-Suffix.
+  const GROUP_FILE = { "Jungen": "boys", "Mädchen": "girls", "Gemischt": "mixed" };
 
   function inputsComplete() {
     return REQUIRED_FIELDS.every((k) => (state.inputs[k] || "").trim().length > 0);
@@ -264,11 +274,12 @@
     artEl.style.background = art.gradient || "linear-gradient(135deg, #ffd4b8, #c9e4ff)";
     artEl.innerHTML = "";
 
-    // Szenen-Illustration als lokale Datei (images/<sceneId>.jpg).
-    // Die Bilder wurden einmalig ueber Pollinations.ai generiert und
-    // ins Repo committet — laden damit sofort, keine API-Abhaengigkeit.
-    // Falls eine Datei fehlt (404), entfernt sich das <img> selbst und
-    // die Emoji-Collage bleibt als Fallback sichtbar.
+    // Szenen-Illustration als lokale Datei (images/<sceneId>-<group>.jpg).
+    // Die Bilder wurden pro Gruppen-Variante (boys|girls|mixed) einmalig ueber
+    // Pollinations.ai generiert und ins Repo committet.
+    // Falls eine Datei fehlt (404), entfernt sich das <img> selbst und die
+    // Emoji-Collage bleibt als Fallback sichtbar.
+    const groupKey = GROUP_FILE[state.inputs.group] || "mixed";
     if (sceneId) {
       const photo = document.createElement("img");
       photo.className = "art-photo";
@@ -279,7 +290,7 @@
         artEl.classList.add("has-photo"); // blendet die Emoji-Collage aus
       };
       photo.onerror = () => photo.remove();
-      photo.src = `images/${sceneId}.jpg`;
+      photo.src = `images/${sceneId}-${groupKey}.jpg`;
       artEl.appendChild(photo);
     }
 

@@ -365,9 +365,9 @@ body {
   position: relative;
   isolation: isolate;
   width: 100%;
-  max-width: 560px;
+  max-width: 520px;
   margin: 0 auto 18px;
-  aspect-ratio: 40 / 21; /* passt exakt zu den generierten 800x420-Bildern */
+  aspect-ratio: 4 / 3; /* passt zu den neu generierten 800x600-Bildern */
   border-radius: var(--radius-md);
   overflow: hidden;
   background: linear-gradient(135deg, #ffd4b8, #c9e4ff);
@@ -405,13 +405,21 @@ body {
   opacity: 1;
 }
 
-/* Sobald das illustrierte Bild geladen ist, weichen die Emoji-Platzhalter
-   (Hero + Items) sanft — das Bild selbst enthaelt schon die Szene. */
-.scene-art.has-photo .art-hero,
+/* Sobald das illustrierte Bild geladen ist, verschwinden die kleinen Items
+   und die Vignette. Das Hero-Emoji (Tier) bleibt als Charakter auf dem
+   Landschaftsbild sichtbar — die Bilder haben keine Menschen. */
 .scene-art.has-photo .art-item,
 .scene-art.has-photo::before {
   opacity: 0;
   transition: opacity 0.6s ease;
+}
+
+/* Hero auf Foto: leicht kleiner und mit kraeftigem Schatten, damit er
+   sich klar vom Bild abhebt. */
+.scene-art.has-photo .art-hero {
+  font-size: clamp(70px, 14vw, 120px);
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.6))
+          drop-shadow(0 0 24px rgba(255, 255, 255, 0.35));
 }
 
 .art-hero {
